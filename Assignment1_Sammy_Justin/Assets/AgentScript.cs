@@ -14,16 +14,23 @@ public class AgentScript : MonoBehaviour {
 	// Update is called once per frame
 	public void Update () {
 		UpdatePosition();
-		Move();
+		//TODO Rangefinder loop, adjacency sensor loop, radar loop
 	}
 
 	private void UpdatePosition(){
 		x = transform.position.x;
-		y = transform.position.y;
+		y = transform.position.z;
 		theta = transform.eulerAngles.y;
 	}
 
-	private void Move(){
+	private void Turn(bool dir){
+
+		if(dir){
+			//
+		}
+		else{
+
+		}
 //		int xAxis = ((Input.GetKey(right))?1:0)-((Input.GetKey(left))?1:0);
 //		xMove = xAxis*moveSpeed*Time.deltaTime;
 //		

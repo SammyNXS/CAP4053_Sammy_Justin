@@ -18,6 +18,8 @@ public class ControllerScript : MonoBehaviour {
 
 	public bool agentFlag = true;
 
+	public bool modeFlag = true;
+
 	// Use this for initialization
 	void Start () {
 		agents = GameObject.FindGameObjectsWithTag("Agent");
@@ -25,27 +27,89 @@ public class ControllerScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(agentFlag){
-			bool leftBool = Input.GetKey(left);
-			bool rightBool = Input.GetKey(right);
+		bool leftBool = Input.GetKey(left);
+		bool rightBool = Input.GetKey(right);
+		bool upBool = Input.GetKey(up);
+		bool downBool = Input.GetKey(down);
 
-			if(leftBool){
+		bool spaceBool =Input.GetKey(KeyCode.Space);
+
+		if(selectMode && agentFlag){
+			if(spaceBool && modeFlag){
+				currentAgent = agents[agentNum];
+				modeFlag = false;
+				selectMode = false;
+				StartCoroutine("ModeSelectCool");
+			}
+			if(leftBool || upBool){
 				agentFlag = false;
 				StartCoroutine(AgentSelectCool(false));
 			}
-			else if(rightBool){
+			else if(rightBool || downBool){
 				agentFlag = false;
 				StartCoroutine(AgentSelectCool(true));
+			}
+		}
+		else{
+			if(spaceBool && modeFlag){
+				selectMode = true;
+				modeFlag = false;
+				StartCoroutine("ModeSelectCool");
+			}
+			if(leftBool){
+				currentAgent.SendMessage("Turn",false);
+			}
+			else if(rightBool){
+				currentAgent.SendMessage("Turn",true);
+			}
+			else if(upBool){
+				currentAgent.SendMessage("Move",false);
+			}
+			else if(downBool){
+				currentAgent.SendMessage("Move",true);
 			}
 		}
 	}
 
 	// Use this for initializing GUI
 	void OnGUI () {
-		GUI.Box(new Rect(10,10,200,50),
-		        "Move arrows left and right to\n" +
-		        "selet an agent, then press enter\n" +
-		        "to control: Agent #" + agentNum);
+		if (selectMode) {
+			GUI.Box(new Rect(10,10,225,60),
+			        "Move arrows left and right to\n" +
+			        "selet an agent, then press spacebar\n" +
+			        "to control: Agent #" + agentNum);
+		}
+		else{
+			/* TODO: Print stuff:
+			 * Current Agent: 1
+			 * 
+			 * x:
+			 * 
+			 * y:
+			 * 
+			 * theta:
+			 * 
+			 * Rangefinder: 
+			 *     Distance 0:...
+			 * 	   Distance 1:...
+			 *     Distance 2:...
+			 * 
+			 * Adjacency Sensor:
+			 *     Agent 1:
+			 *        Distance:..
+			 * 		  Relative Heading:..
+			 *     Agent 2:
+			 * 		  Distance:...
+			 * 		  Relative Heading:...
+			 * 
+			 * Radar:
+			 * 		Front: 1
+			 * 		Back: 0
+			 * 		Left: 1
+			 * 		Right: 0
+			 * 
+			 */
+		}
 	}
 
 	IEnumerator AgentSelectCool(bool dir){
@@ -69,6 +133,13 @@ public class ControllerScript : MonoBehaviour {
 				}
 			}
 			agentFlag = true;
+		}
+	}
+
+	IEnumerator ModeSelectCool(){
+		while (!modeFlag) {
+			yield return new WaitForSeconds(1f/6);
+			modeFlag = true;
 		}
 	}
 }
