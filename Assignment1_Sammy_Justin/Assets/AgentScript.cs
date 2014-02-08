@@ -2,12 +2,18 @@
 using System.Collections;
 
 public class AgentScript : MonoBehaviour {
+
 	public double x;
 	public double y;
 	public double theta;
-
+	public float moveSpeed;
+	public float rotateSpeed;
+	public float temp;
+	
 	// Use this for initialization
 	public void Start () {
+		moveSpeed = .25f;
+		rotateSpeed = 5f;
 		UpdatePosition();
 	}
 
@@ -19,18 +25,31 @@ public class AgentScript : MonoBehaviour {
 
 	private void UpdatePosition(){
 		x = transform.position.x;
-		y = transform.position.z;
+		y = transform.position.y;
 		theta = transform.eulerAngles.y;
 	}
 
 	private void Turn(bool dir){
 
+		 if (dir) {
+			transform.Rotate(Vector3.up*rotateSpeed);
+		} else {
+			transform.Rotate(Vector3.down*rotateSpeed);
+		}
+	}
+
+	private void Move(bool dir) {
+
 		if(dir){
-			//
+			transform.Translate(-Vector3.forward*moveSpeed);
 		}
 		else{
-
+			transform.Translate(Vector3.forward*moveSpeed);
 		}
+
+	}
+
+
 //		int xAxis = ((Input.GetKey(right))?1:0)-((Input.GetKey(left))?1:0);
 //		xMove = xAxis*moveSpeed*Time.deltaTime;
 //		
@@ -69,4 +88,4 @@ public class AgentScript : MonoBehaviour {
 //		transform.
 //			transform.position+= new Vector3(xMove,0,0);
 	}
-}
+

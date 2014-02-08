@@ -52,6 +52,7 @@ public class ControllerScript : MonoBehaviour {
 		}
 		else{
 			if(spaceBool && modeFlag){
+				currentAgent = agents[agentNum];
 				selectMode = true;
 				modeFlag = false;
 				StartCoroutine("ModeSelectCool");
