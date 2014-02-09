@@ -14,6 +14,10 @@ public class AgentScript : MonoBehaviour {
 	public GameObject proj;
 	public GameObject[] agents;
 	public Pair<double,double>[] adjacentAgents;
+	public double upDistance;
+	public double leftDistance;
+	public double rightDistance;
+	public float rangeDistance;
 
 	public class Pair<T, U> {
 		public Pair() {
@@ -41,6 +45,10 @@ public class AgentScript : MonoBehaviour {
 		moveSpeed = .15f;
 		rotateSpeed = 3f;
 		inControl = false;
+		rangeDistance = 4.5f;
+		upDistance = rangeDistance;
+		leftDistance = rangeDistance;
+		rightDistance = rangeDistance;
 		UpdatePosition();
 	}
 
@@ -66,7 +74,49 @@ public class AgentScript : MonoBehaviour {
 	}
 
 	private void rangeFinder(){
-	
+		RaycastHit hit;
+		
+		Vector3 leftDir = Quaternion.AngleAxis (-30+transform.eulerAngles.y, Vector3.up) * Vector3.forward;
+		Vector3 rightDir = Quaternion.AngleAxis (30+transform.eulerAngles.y, Vector3.up) * Vector3.forward;
+		
+		Ray upRay = new Ray(transform.position, transform.forward);
+		Ray leftRay = new Ray (transform.position, leftDir);
+		Ray rightRay = new Ray(transform.position, rightDir);
+		
+		
+		Debug.DrawRay (transform.position, transform.forward*rangeDistance, Color.red);
+		Debug.DrawRay (transform.position, leftDir*rangeDistance, Color.red);
+		Debug.DrawRay (transform.position, rightDir*rangeDistance, Color.red);
+		
+		if (Physics.Raycast (upRay, out hit, rangeDistance)) {
+			
+			if (hit.collider.tag == "Wall") {
+				upDistance = Vector3.Distance (hit.collider.transform.position, transform.position);
+			}
+
+		} else {
+			upDistance = rangeDistance;
+		  }
+
+		if (Physics.Raycast (leftRay, out hit, rangeDistance)) {
+
+			if (hit.collider.tag == "Wall") {
+				leftDistance = Vector3.Distance (hit.collider.transform.position, transform.position);
+			}
+
+		} else {
+			leftDistance = rangeDistance;
+		  }
+
+		if (Physics.Raycast (rightRay, out hit, rangeDistance)) {
+
+			if (hit.collider.tag == "Wall") {
+				rightDistance = Vector3.Distance (hit.collider.transform.position, transform.position);
+			}
+		} else {
+			rightDistance = rangeDistance;
+		  }
+
 	}
 
 	private void AdjacencySensor(){
@@ -135,13 +185,10 @@ public class AgentScript : MonoBehaviour {
 	}
 
 	private string  PrintDistances(){
-		return "\nTODO";
-		/*
-		 * 
-		 * Distance 0: #
-		 * Distance 1: #
-		 * Distance 2: #
-		 */
+		StringBuilder builder = new StringBuilder ();
+		builder.Append("\nForward distance " + upDistance + "\nLeft distance " + leftDistance + "\nRight distance " + rightDistance);
+
+		return builder.ToString();
 	}
 
 	private string PrintAdjacencyInfo(){
