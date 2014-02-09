@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ControllerScript : MonoBehaviour {
+public class ControllerScript: MonoBehaviour {
 	
 	public KeyCode up = KeyCode.UpArrow;
 	public KeyCode down = KeyCode.DownArrow;
@@ -40,6 +40,7 @@ public class ControllerScript : MonoBehaviour {
 				currentAgent = agents[agentNum];
 				modeFlag = false;
 				selectMode = false;
+				currentAgent.SendMessage("SwitchControl");
 				StartCoroutine("ModeSelectCool");
 			}
 			if(leftBool || upBool){
@@ -53,9 +54,10 @@ public class ControllerScript : MonoBehaviour {
 		}
 		else if (!selectMode){
 			if(spaceBool && modeFlag){
-				currentAgent = agents[agentNum];
+				//currentAgent = agents[agentNum];
 				selectMode = true;
 				modeFlag = false;
+				currentAgent.SendMessage("SwitchControl");
 				StartCoroutine("ModeSelectCool");
 			}
 			if(leftBool){
@@ -82,36 +84,16 @@ public class ControllerScript : MonoBehaviour {
 			        "to control: Agent #" + agentNum);
 		}
 		else{
-			/* TODO: Print stuff:
-			 * Current Agent: 1
-			 * 
-			 * x:
-			 * 
-			 * y:
-			 * 
-			 * theta:
-			 * 
-			 * Rangefinder: 
-			 *     Distance 0:...
-			 * 	   Distance 1:...
-			 *     Distance 2:...
-			 * 
-			 * Adjacency Sensor:
-			 *     Agent 1:
-			 *        Distance:..
-			 * 		  Relative Heading:..
-			 *     Agent 2:
-			 * 		  Distance:...
-			 * 		  Relative Heading:...
-			 * 
-			 * Radar:
-			 * 		Front: 1
-			 * 		Back: 0
-			 * 		Left: 1
-			 * 		Right: 0
-			 * 
-			 */
+			GUI.Box(new Rect(Screen.width-235,10,225,300),
+			        "Current Agent: " + agentNum 
+			        +  getCurrentAgentData());
 		}
+	}
+
+	private string getCurrentAgentData(){
+		StringWrapper wrap = new StringWrapper();
+		currentAgent.SendMessage ("ToString", wrap);
+		return wrap.output;
 	}
 
 	IEnumerator AgentSelectCool(bool dir){
@@ -143,5 +125,11 @@ public class ControllerScript : MonoBehaviour {
 			yield return new WaitForSeconds(1f/6);
 			modeFlag = true;
 		}
+	}
+}
+
+public class StringWrapper {
+	public string output = "blah";
+	public StringWrapper() {
 	}
 }
