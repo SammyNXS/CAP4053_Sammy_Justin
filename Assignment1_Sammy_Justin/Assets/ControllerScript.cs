@@ -23,6 +23,7 @@ public class ControllerScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		agents = GameObject.FindGameObjectsWithTag("Agent");
+		currentAgent = agents [0];
 	}
 	
 	// Update is called once per frame
@@ -50,7 +51,7 @@ public class ControllerScript : MonoBehaviour {
 				StartCoroutine(AgentSelectCool(true));
 			}
 		}
-		else{
+		else if (!selectMode){
 			if(spaceBool && modeFlag){
 				currentAgent = agents[agentNum];
 				selectMode = true;

@@ -9,18 +9,20 @@ public class AgentScript : MonoBehaviour {
 	public float moveSpeed;
 	public float rotateSpeed;
 	public float temp;
+	public bool inControl;
 	
 	// Use this for initialization
 	public void Start () {
 		moveSpeed = .25f;
 		rotateSpeed = 5f;
+		inControl = false;
 		UpdatePosition();
-		rangeFinder();
 	}
 
 	// Update is called once per frame
 	public void Update () {
 		UpdatePosition();
+		rangeFinder();
 		//TODO Rangefinder loop, adjacency sensor loop, radar loop
 	}
 
@@ -36,7 +38,7 @@ public class AgentScript : MonoBehaviour {
 
 	private void Turn(bool dir){
 
-		 if (dir) {
+		if (dir) {
 			transform.Rotate(Vector3.up*rotateSpeed);
 		} else {
 			transform.Rotate(Vector3.down*rotateSpeed);
