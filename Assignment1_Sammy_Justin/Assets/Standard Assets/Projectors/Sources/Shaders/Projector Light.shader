@@ -2,7 +2,6 @@ Shader "Projector/Light" {
   Properties {
   	  _Color ("Main Color", Color) = (1,1,1,1)   	
      _ShadowTex ("Cookie", 2D) = "" { TexGen ObjectLinear }
-     _FalloffTex ("FallOff", 2D) = "" { TexGen ObjectLinear }
   }
   Subshader {
      Pass {
@@ -15,11 +14,6 @@ Shader "Projector/Light" {
         SetTexture [_ShadowTex] {
 		   combine texture * primary, ONE - texture
            Matrix [_Projector]
-        }
-        SetTexture [_FalloffTex] {
-           constantColor (0,0,0,0)
-           combine previous lerp (texture) constant
-           Matrix [_ProjectorClip]
         }
      }
   }
